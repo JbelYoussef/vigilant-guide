@@ -2,13 +2,32 @@
 <head>
 <title>Formulaire</title>
 </head>
-<body>
+<body style="background-color:white;">
+<br><br>
+<hr>
+<h3 style="color:black; font-family:verdana; text-align:center;">ERP DATABASE UPDATER</h3>
+<hr><br>
 <form action="http://127.0.0.1:5000/handle_params" method="POST">
+
+<h5 style="font-family:verdana;">Universe:
 <select name="INDEX_TICKER">
-  <option value="SX5E">SX5E</option>
-  <option value="SPX">SPX</option>
+  <option value="SXXP Index">STOXX600</option>
+  <option value="RIY Index">RUSSELL1000</option>
+  <option value="SMI Index">SMI</option>
+  <option value="DAX Index">DAX</option>
+  <option value="SBF120 Index">SBF120</option>
 </select>
-<input type="submit" name="submit_btn" value="Envoyer"></input>
+</h5>
+
+<h5 style="font-family:verdana;">Start date:
+<input type="date" name="start_date"></h5>
+<h5 style="font-family:verdana;">End date:
+<input type="date" name="end_date"></h5>
+
+<h5 style="font-family:verdana;">Bloomberg fields:</h5>
+<textarea rows="4" cols="50" name="blb_fields" value="blb_fields">PX_LAST,PX_VOLUME</textarea>
+<br><br>
+<input type="submit" name="submit_btn" value="Update database"></input>
 </form>
 </body>
 </html>
