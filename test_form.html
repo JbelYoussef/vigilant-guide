@@ -31,3 +31,84 @@
 </form>
 </body>
 </html>
+
+
+import flask
+from flask import request
+app = flask.Flask(__name__)
+
+import platform
+platform.architecture()
+
+import pandas as pd
+import numpy as np
+from os import path
+#import StringIO
+#import sys
+from BacktesteurERP.ERP_utils import update_db
+
+h5_path = 'BacktesteurERP'
+
+
+@app.route("/handle_params", methods=['POST'])    
+def handle_params():
+    
+    #old_stdout = sys.stdout
+    #sys.stdout = StringIO.StringIO()
+    
+    index_ticker = request.form['INDEX_TICKER']
+    print index_ticker
+    if index_ticker =='SXXP Index':
+        currency = 'EUR'
+        universe_label = 'STOXX600'
+    elif index_ticker =='RIY Index':
+        currency = 'USD'
+        universe_label = 'RUSSELL1000'
+    if index_ticker =='DAX Index':
+        currency = 'EUR'
+        universe_label = 'DAX'
+    if index_ticker =='SMI Index':
+        currency = 'CHF'
+        universe_label = 'SMI'
+    if index_ticker =='SBF120 Index':
+        currency = 'EUR'
+        universe_label = 'SBF120'
+    
+    start_date = request.form['start_date']
+    end_date = request.form['end_date']
+    
+    blb_fields = request.form['blb_fields'].split(',')
+    print index_ticker, blb_fields, currency, universe_label, pd.Timestamp(start_date), pd.Timestamp(end_date)
+    update_db([index_ticker], blb_fields, [currency], [universe_label], pd.Timestamp(start_date), pd.Timestamp(end_date))
+    #res = sys.stdout.getvalue()
+    #sys.stdout = old_stdout 
+    return 'DONE'
+
+
+app.run()   
+
+
+
+def generate_plot_html(data_series): 
+    return """
+    <html>
+        <head>
+          <!-- Plotly.js -->
+          <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+        </head>
+        <body>
+        <div id="data_series"></div>
+        <script>
+        var data = [
+          {
+            x: ['""" + "','".join([str(x) for x in data_series.index]) + """'],
+            y: [""" + ",".join([str(x) for x in data_series.values]) + """],
+            type: 'scatter'
+          }
+        ];
+
+        Plotly.newPlot('data_series', data);
+        </script>
+        </body>
+    </html>
+    """
